@@ -4,7 +4,7 @@
 #          now maintained by github.com/ghuntley/
 
 from __future__ import with_statement
-import sys, string, xmlrpclib, re, os, ConfigParser, commands
+import sys, string, xmlrpclib, re, os, ConfigParser, commands, mimetypes
 
 ## Stuff TODO:
 ##      - command line options instead of config file as an alternative
@@ -61,6 +61,6 @@ with open(filename, 'rb') as f:
 
     attachment = {};
     attachment['fileName'] = os.path.basename(filename);
-    attachment['contentType'] = commands.getstatusoutput('file -b --mime-type ' + attachment['fileName'])[1];
-
-    server.confluence2.addAttachment(token, page['id'], attachment, xmlrpclib.Binary(data));
+    attachment['contentType'] = mimetypes.guess_type(filename)[0]
+    
+    print server.confluence2.addAttachment(token, page['id'], attachment, xmlrpclib.Binary(data))['url'];
